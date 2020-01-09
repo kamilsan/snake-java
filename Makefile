@@ -1,7 +1,7 @@
 OUT_DIR=out
 FLAGS=-d $(OUT_DIR)
 PKG_DIR=com/snake
-SRCS=$(PKG_DIR)/Game.java
+SRCS=$(PKG_DIR)/Game.java $(PKG_DIR)/Window.java
 
 all: $(SRCS)
 	javac $(FLAGS) $(SRCS)
