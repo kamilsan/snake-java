@@ -5,36 +5,44 @@ import java.awt.*;
 
 public class Window extends JFrame
 {
-    public Window()
-    {
-        super();
-        setTitle("Snake");
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+  private SnakeView snakeView;
 
-        final JPanel canvas = new JPanel();
-        final JPanel buttons = new JPanel();
-        final JButton startBtn = new JButton();
-        final JButton pauseBtn = new JButton();
+  public Window()
+  {
+    super();
+    setTitle("Snake");
+    getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        canvas.setPreferredSize(new Dimension(500, 500));
-        canvas.setBackground(Color.BLACK);
+    snakeView = new SnakeView();
+    final JPanel buttons = new JPanel();
+    final JButton startBtn = new JButton();
+    final JButton pauseBtn = new JButton();
 
-        startBtn.setText("Start Game!");
-        pauseBtn.setText("Pause Game!");
+    snakeView.setPreferredSize(new Dimension(500, 500));
+    snakeView.setBackground(Color.BLACK);
 
-        buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
-        buttons.add(startBtn);
-        buttons.add(Box.createRigidArea(new Dimension(5, 0)));
-        buttons.add(pauseBtn);
+    startBtn.setText("Start Game!");
+    pauseBtn.setText("Pause Game!");
 
-        add(canvas);
-        add(Box.createVerticalStrut(10));
-        add(buttons);
-        add(Box.createVerticalStrut(10));
+    buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
+    buttons.add(startBtn);
+    buttons.add(Box.createRigidArea(new Dimension(5, 0)));
+    buttons.add(pauseBtn);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
+    add(snakeView);
+    add(Box.createVerticalStrut(10));
+    add(buttons);
+    add(Box.createVerticalStrut(10));
+
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    pack();
+    setFocusable(true);
+    setLocationRelativeTo(null);
+    setVisible(true);
+  }
+
+  public SnakeView getSnakeView()
+  {
+    return snakeView;
+  }
 }
