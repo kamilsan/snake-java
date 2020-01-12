@@ -20,7 +20,7 @@ public class Controller
 
     updateViewPosition();
 
-    timer = new Timer(400, new TimerListener());
+    timer = new Timer(140, new TimerListener());
     timer.start();
 
     this.window.addKeyListener(new KeyListener()

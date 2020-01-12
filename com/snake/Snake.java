@@ -12,18 +12,23 @@ public class Snake
   private final Point2D headLocation;
   private SnakeDirection direction;
 
-  public Snake() {
+  public Snake() 
+  {
     headLocation = new Point.Float(0, 0);
     bodySegments.add(headLocation);
     direction = SnakeDirection.UP;
   }
 
-  public void update() {
-    for (int i = bodySegments.size() - 1; i > 0; --i) {
+  public void update()
+  {
+    for (int i = bodySegments.size() - 1; i > 0; --i) 
+    {
       bodySegments.set(i, bodySegments.get(i - 1));
     }
     bodySegments.set(0, headLocation);
-    switch (direction) {
+
+    switch (direction) 
+    {
       case UP:
         headLocation.setLocation(headLocation.getX(), headLocation.getY() - SPEED);
         break;
@@ -35,6 +40,8 @@ public class Snake
         break;
       case LEFT:
         headLocation.setLocation(headLocation.getX() - SPEED, headLocation.getY());
+        break;
+      default:
         break;
     }
 
@@ -54,7 +61,8 @@ public class Snake
     return headLocation;
   }
 
-  public SnakeDirection getDirection() {
+  public SnakeDirection getDirection() 
+  {
     return direction;
   }
 
