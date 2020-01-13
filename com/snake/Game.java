@@ -10,6 +10,6 @@ public class Game
     
     Window gameWindow = new Window(VIEW_SIZE, CELL_SIZE);
     Snake snakeModel = new Snake(GRID_SIZE);
-    Controller controller = new Controller(snakeModel, gameWindow.getSnakeView());
+    Controller controller = new Controller(snakeModel, gameWindow);
   }
 }

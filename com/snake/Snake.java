@@ -7,26 +7,27 @@ public class Snake
 {
   public enum SnakeDirection { UP, RIGHT, DOWN, LEFT };
   private final ArrayList<Point> bodySegments = new ArrayList<>();
-  private final Point headLocation;
   private SnakeDirection direction;
   private final int gridSize;
 
   public Snake(int gridSize) 
   {
-    headLocation = new Point(gridSize/2, gridSize/2);
     this.gridSize = gridSize;
-    bodySegments.add(headLocation);
     direction = SnakeDirection.UP;
+    Point headLocation = new Point(gridSize/2, gridSize/2);
+    bodySegments.add(headLocation);
+    bodySegments.add(new Point(gridSize/2, gridSize/2 + 1));
+    bodySegments.add(new Point(gridSize/2, gridSize/2 + 2));
   }
 
   public void update()
   {
     for (int i = bodySegments.size() - 1; i > 0; --i) 
     {
-      bodySegments.set(i, bodySegments.get(i - 1));
+      bodySegments.set(i, (Point)bodySegments.get(i - 1).clone());
     }
-    bodySegments.set(0, headLocation);
 
+    Point headLocation = bodySegments.get(0);
     switch (direction) 
     {
       case UP:
@@ -56,9 +57,9 @@ public class Snake
       headLocation.setLocation(headLocation.getX(), gridSize - 1);
   }
 
-  public Point getPosition()
+  public ArrayList<Point> getBodySegments()
   {
-    return headLocation;
+    return bodySegments;
   }
 
   public SnakeDirection getDirection() 
@@ -73,6 +74,6 @@ public class Snake
 
   public boolean checkForSelfCollision()
   {
-    return bodySegments.stream().anyMatch((point) -> point.equals(headLocation));
+    return bodySegments.stream().anyMatch((point) -> point.equals(bodySegments.get(0)));
   }
 }

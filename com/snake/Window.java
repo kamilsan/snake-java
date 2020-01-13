@@ -2,10 +2,13 @@ package com.snake;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Window extends JFrame
 {
   private SnakeView snakeView;
+  private final JButton startBtn;
+  private final JButton pauseBtn;
 
   public Window(int viewSize, int cellSize)
   {
@@ -14,13 +17,12 @@ public class Window extends JFrame
     getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
     snakeView = new SnakeView(viewSize, cellSize);
-    final JPanel buttons = new JPanel();
-    final JButton startBtn = new JButton();
-    final JButton pauseBtn = new JButton();
-
+    startBtn = new JButton();
+    pauseBtn = new JButton();
     startBtn.setText("Start Game!");
     pauseBtn.setText("Pause Game!");
-
+    
+    final JPanel buttons = new JPanel();
     buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
     buttons.add(startBtn);
     buttons.add(Box.createRigidArea(new Dimension(5, 0)));
@@ -41,5 +43,15 @@ public class Window extends JFrame
   public SnakeView getSnakeView()
   {
     return snakeView;
+  }
+
+  public void addStartActionListener(ActionListener listener)
+  {
+    startBtn.addActionListener(listener);
+  }
+
+  public void addPauseActionListener(ActionListener listener)
+  {
+    pauseBtn.addActionListener(listener);
   }
 }
