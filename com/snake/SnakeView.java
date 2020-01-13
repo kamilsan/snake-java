@@ -1,28 +1,35 @@
 package com.snake;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
+import java.awt.Point;
 import javax.swing.JPanel;
 
 public class SnakeView extends JPanel
 {
-  private final int SIZE = 12;
-  private Point2D position;
+  private final int cellSize;
+  private Point position;
 
-  public SnakeView()
+  public SnakeView(int viewSize, int cellSize)
   {
     super();
-    position = new Point(0, 0);
+    setPreferredSize(new Dimension(viewSize, viewSize));
+    setDoubleBuffered(true);
+    setBackground(Color.BLACK);
+    setFocusable(true);
+
+    position = new Point(viewSize/2, viewSize/2);
+    this.cellSize = cellSize;
   }
 
-  public Point2D getPosition()
+  public Point getPosition()
   {
     return position;
   }
 
-  public void setPosition(Point2D newPosition)
+  public void setPosition(Point newPosition)
   {
-    position.setLocation(newPosition);
+    Point positionInGrid = newPosition;
+    position.setLocation(positionInGrid.getX()*cellSize, positionInGrid.getY()*cellSize);
     repaint();
   }
 
@@ -30,6 +37,9 @@ public class SnakeView extends JPanel
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     g.setColor(Color.RED);
-    g.fillRect((int)position.getX(), (int)position.getY(), SIZE, SIZE);
+    g.fillRect((int)position.getX(), 
+      (int)position.getY(), cellSize, cellSize);
+    
+    Toolkit.getDefaultToolkit().sync();
   }
 }

@@ -1,20 +1,20 @@
 package com.snake;
 
-import java.awt.*;
-import java.awt.geom.Point2D;
+import java.awt.Point;
 import java.util.ArrayList;
 
 public class Snake
 {
   public enum SnakeDirection { UP, RIGHT, DOWN, LEFT };
-  private final float SPEED = 0.1f;
-  private final ArrayList<Point2D> bodySegments = new ArrayList<>();
-  private final Point2D headLocation;
+  private final ArrayList<Point> bodySegments = new ArrayList<>();
+  private final Point headLocation;
   private SnakeDirection direction;
+  private final int gridSize;
 
-  public Snake() 
+  public Snake(int gridSize) 
   {
-    headLocation = new Point.Float(0, 0);
+    headLocation = new Point(gridSize/2, gridSize/2);
+    this.gridSize = gridSize;
     bodySegments.add(headLocation);
     direction = SnakeDirection.UP;
   }
@@ -30,33 +30,33 @@ public class Snake
     switch (direction) 
     {
       case UP:
-        headLocation.setLocation(headLocation.getX(), headLocation.getY() - SPEED);
+        headLocation.setLocation(headLocation.getX(), headLocation.getY() - 1);
         break;
       case RIGHT:
-        headLocation.setLocation(headLocation.getX() + SPEED, headLocation.getY());
+        headLocation.setLocation(headLocation.getX() + 1, headLocation.getY());
         break;
       case DOWN:
-        headLocation.setLocation(headLocation.getX(), headLocation.getY() + SPEED);
+        headLocation.setLocation(headLocation.getX(), headLocation.getY() + 1);
         break;
       case LEFT:
-        headLocation.setLocation(headLocation.getX() - SPEED, headLocation.getY());
+        headLocation.setLocation(headLocation.getX() - 1, headLocation.getY());
         break;
       default:
         break;
     }
 
-    if(headLocation.getX() > 1.0f)
-      headLocation.setLocation(-1.0f, headLocation.getY());
-    else if(headLocation.getX() < -1.0f)
-      headLocation.setLocation(1.0f, headLocation.getY());
+    if(headLocation.getX() >= gridSize)
+      headLocation.setLocation(0, headLocation.getY());
+    else if(headLocation.getX() < 0)
+      headLocation.setLocation(gridSize - 1, headLocation.getY());
 
-    if(headLocation.getY() > 1.0f)
-      headLocation.setLocation(headLocation.getX(), -1.0f);
-    else if(headLocation.getY() < -1.0f)
-      headLocation.setLocation(headLocation.getX(), 1.0f);
+    if(headLocation.getY() >= gridSize)
+      headLocation.setLocation(headLocation.getX(), 0);
+    else if(headLocation.getY() < 0)
+      headLocation.setLocation(headLocation.getX(), gridSize - 1);
   }
 
-  public Point2D getPosition()
+  public Point getPosition()
   {
     return headLocation;
   }

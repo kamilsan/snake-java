@@ -7,19 +7,16 @@ public class Window extends JFrame
 {
   private SnakeView snakeView;
 
-  public Window()
+  public Window(int viewSize, int cellSize)
   {
     super();
     setTitle("Snake");
     getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-    snakeView = new SnakeView();
+    snakeView = new SnakeView(viewSize, cellSize);
     final JPanel buttons = new JPanel();
     final JButton startBtn = new JButton();
     final JButton pauseBtn = new JButton();
-
-    snakeView.setPreferredSize(new Dimension(500, 500));
-    snakeView.setBackground(Color.BLACK);
 
     startBtn.setText("Start Game!");
     pauseBtn.setText("Pause Game!");
@@ -35,8 +32,8 @@ public class Window extends JFrame
     add(Box.createVerticalStrut(10));
 
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    setResizable(false);
     pack();
-    setFocusable(true);
     setLocationRelativeTo(null);
     setVisible(true);
   }

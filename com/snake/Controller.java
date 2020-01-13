@@ -1,29 +1,20 @@
 package com.snake;
 
-import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.awt.event.*;
 import javax.swing.Timer;
 
-public class Controller
+public class Controller implements ActionListener
 {
-  private Window window;
   private Snake model;
   private SnakeView view;
   private Timer timer;
 
-  Controller(Window window, Snake model)
+  Controller(Snake model, SnakeView view)
   {
-    this.window = window;
     this.model = model;
-    this.view = window.getSnakeView();
+    this.view = view;
 
-    updateViewPosition();
-
-    timer = new Timer(140, new TimerListener());
-    timer.start();
-
-    this.window.addKeyListener(new KeyListener()
+    this.view.addKeyListener(new KeyListener()
     {
       public void keyTyped(KeyEvent ev)
       {
@@ -40,6 +31,11 @@ public class Controller
         handleKeyPress(ev.getKeyCode());
       }
     });
+
+    updateViewPosition();
+
+    timer = new Timer(150, this);
+    timer.start();    
   }
 
   private void handleKeyPress(int keyCode)
@@ -65,10 +61,7 @@ public class Controller
 
   private void updateViewPosition()
   {
-    Point2D positionAbsolute = model.getPosition();
-    int x = Math.round(0.5f*view.getWidth()*((float)positionAbsolute.getX() + 1.0f));
-    int y = Math.round(0.5f*view.getHeight()*((float)positionAbsolute.getY() + 1.0f));
-    view.setPosition(new Point(x, y));
+    view.setPosition(model.getPosition());
   }
 
   private void timerTick()
@@ -77,11 +70,8 @@ public class Controller
     updateViewPosition();
   }
 
-  class TimerListener implements ActionListener
+  public void actionPerformed(ActionEvent evt) 
   {
-    public void actionPerformed(ActionEvent evt) 
-    {
-      timerTick();
-    }
+    timerTick();
   }
 }
