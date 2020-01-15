@@ -1,6 +1,7 @@
 package com.snake;
 
 import java.awt.event.*;
+import java.awt.Point;
 import javax.swing.Timer;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -15,8 +16,10 @@ public class Controller
   private SnakeView snakeView;
   private Apple appleModel;
   private AppleView appleView;
-  private ScoreView scoreView;
+  private TextView scoreView;
+  private TextView messageView;
 
+  private boolean inputHandled;
   private Timer timer;
   private GameState gameState;
   private int score;
@@ -29,8 +32,14 @@ public class Controller
     this.appleModel = appleModel;
     this.appleView = appleView;
 
-    scoreView = new ScoreView();
+    scoreView = new TextView("Scores: 0", new Point(15, 15));
+    messageView = new TextView("Click the button below to start playing!", 
+      new Point(gameView.getWidth()/2, gameView.getHeight() - 15));
+
+    scoreView.setAnchor(TextView.AnchorType.Left);
+
     gameView.addView(scoreView);
+    gameView.addView(messageView);
 
     final int CONDITION = JComponent.WHEN_IN_FOCUSED_WINDOW;
     gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("W"), "move up");
@@ -53,6 +62,7 @@ public class Controller
     });
 
     gameState = GameState.Paused;
+    inputHandled = true;
     score = 0;
 
     window.addStartActionListener(new ActionListener()
@@ -62,8 +72,14 @@ public class Controller
       {
         if(gameState == GameState.Paused)
         {
+          messageView.setVisibility(false);
           gameState = GameState.Running;
           timer.start();
+        }
+        else if(gameState == GameState.PlayerLosed)
+        {
+          messageView.setVisibility(false);
+          restartGame();
         }
       }
     });
@@ -75,6 +91,9 @@ public class Controller
       {
         if(gameState == GameState.Running)
         {
+          messageView.setMessage("Game Paused.");
+          messageView.setVisibility(true);
+          gameView.repaint();
           gameState = GameState.Paused;
           timer.stop();
         }
@@ -85,13 +104,34 @@ public class Controller
     updateSnakeViewPosition();
   }
 
+  private void restartGame()
+  {
+    snakeModel.reset();
+    score = 0;
+    scoreView.setMessage("Score: " + Integer.toString(score));
+    selectApplesPosition();
+    gameState = GameState.Running;
+    timer.start();
+  }
+
   private void selectApplesPosition()
   {
     do
     {
       appleModel.selectGridPosition(gameView.getGridSize());
-    } while(appleModel.getPosition().equals(snakeModel.getHeadPosition()));
+    } while(!isApplePositionIsValid());
     appleView.setPosition(appleModel.getPosition());
+  }
+
+  private boolean isApplePositionIsValid()
+  {
+    var snakeSegments = snakeModel.getBodySegments();
+    for(var segmentPosition: snakeSegments)
+    {
+      if(segmentPosition.equals(appleModel.getPosition()))
+        return false;
+    }
+    return true;
   }
 
   private void updateSnakeViewPosition()
@@ -102,12 +142,14 @@ public class Controller
   private void timerTick()
   {
     snakeModel.update();
+    inputHandled = true;
     checkIfAppleWasEaten();
-    if(snakeModel.checkForSelfCollision())
+    if(snakeModel.isSelfColliding())
     {
+      messageView.setMessage("You Losed! Click the button below to play again.");
+      messageView.setVisibility(true);
       gameState = GameState.PlayerLosed;
       timer.stop();
-      return;
     }
     updateSnakeViewPosition();
     gameView.repaint();
@@ -118,7 +160,7 @@ public class Controller
     if(appleModel.getPosition().equals(snakeModel.getHeadPosition()))
     {
       score += 1;
-      scoreView.setScore(score);
+      scoreView.setMessage("Score: " + Integer.toString(score));
       snakeModel.grow();
       selectApplesPosition();
     }
@@ -136,8 +178,11 @@ public class Controller
     @Override
     public void actionPerformed(ActionEvent e)
     {
-      if(gameState == GameState.Running)
+      if(inputHandled && gameState == GameState.Running)
+      {
         snakeModel.setDirection(direction);
+        inputHandled = false;
+      }
     }
   }
 }

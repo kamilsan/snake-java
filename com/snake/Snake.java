@@ -13,6 +13,12 @@ public class Snake
   public Snake(int gridSize) 
   {
     this.gridSize = gridSize;
+    reset();
+  }
+
+  public void reset()
+  {
+    bodySegments.clear();
     direction = SnakeDirection.UP;
     Point headLocation = new Point(gridSize/2, gridSize/2);
     bodySegments.add(headLocation);
@@ -86,7 +92,7 @@ public class Snake
       this.direction = direction;
   }
 
-  public boolean checkForSelfCollision()
+  public boolean isSelfColliding()
   {
     var headPosition = bodySegments.get(0);
     return bodySegments.stream().anyMatch((point) -> point.equals(headPosition) && point != headPosition);
