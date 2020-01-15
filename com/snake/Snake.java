@@ -27,34 +27,44 @@ public class Snake
       bodySegments.set(i, (Point)bodySegments.get(i - 1).clone());
     }
 
-    Point headLocation = bodySegments.get(0);
+    Point headPosition = bodySegments.get(0);
     switch (direction) 
     {
       case UP:
-        headLocation.setLocation(headLocation.getX(), headLocation.getY() - 1);
+        headPosition.setLocation(headPosition.getX(), headPosition.getY() - 1);
         break;
       case RIGHT:
-        headLocation.setLocation(headLocation.getX() + 1, headLocation.getY());
+        headPosition.setLocation(headPosition.getX() + 1, headPosition.getY());
         break;
       case DOWN:
-        headLocation.setLocation(headLocation.getX(), headLocation.getY() + 1);
+        headPosition.setLocation(headPosition.getX(), headPosition.getY() + 1);
         break;
       case LEFT:
-        headLocation.setLocation(headLocation.getX() - 1, headLocation.getY());
+        headPosition.setLocation(headPosition.getX() - 1, headPosition.getY());
         break;
       default:
         break;
     }
 
-    if(headLocation.getX() >= gridSize)
-      headLocation.setLocation(0, headLocation.getY());
-    else if(headLocation.getX() < 0)
-      headLocation.setLocation(gridSize - 1, headLocation.getY());
+    if(headPosition.getX() >= gridSize)
+      headPosition.setLocation(0, headPosition.getY());
+    else if(headPosition.getX() < 0)
+      headPosition.setLocation(gridSize - 1, headPosition.getY());
 
-    if(headLocation.getY() >= gridSize)
-      headLocation.setLocation(headLocation.getX(), 0);
-    else if(headLocation.getY() < 0)
-      headLocation.setLocation(headLocation.getX(), gridSize - 1);
+    if(headPosition.getY() >= gridSize)
+      headPosition.setLocation(headPosition.getX(), 0);
+    else if(headPosition.getY() < 0)
+      headPosition.setLocation(headPosition.getX(), gridSize - 1);
+  }
+
+  public void grow()
+  {
+    bodySegments.add((Point)bodySegments.get(bodySegments.size() - 1).clone());
+  }
+
+  public Point getHeadPosition()
+  {
+    return bodySegments.get(0);
   }
 
   public ArrayList<Point> getBodySegments()
@@ -67,13 +77,18 @@ public class Snake
     return direction;
   }
 
-  public void setDirection(final SnakeDirection direction)
+  public void setDirection(SnakeDirection direction)
   {
-    this.direction = direction;
+    if((this.direction == SnakeDirection.LEFT && direction != SnakeDirection.RIGHT) ||
+      (this.direction == SnakeDirection.RIGHT && direction != SnakeDirection.LEFT) ||
+      (this.direction == SnakeDirection.UP && direction != SnakeDirection.DOWN) || 
+      (this.direction == SnakeDirection.DOWN && direction != SnakeDirection.UP))
+      this.direction = direction;
   }
 
   public boolean checkForSelfCollision()
   {
-    return bodySegments.stream().anyMatch((point) -> point.equals(bodySegments.get(0)));
+    var headPosition = bodySegments.get(0);
+    return bodySegments.stream().anyMatch((point) -> point.equals(headPosition) && point != headPosition);
   }
 }

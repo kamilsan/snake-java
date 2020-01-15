@@ -8,36 +8,51 @@ import javax.swing.AbstractAction;
 
 public class Controller implements ActionListener
 {
-  private Snake model;
-  private SnakeView view;
-  private Timer timer;
-  private boolean isGameRunning;
+  private enum GameState { Running, Paused, PlayerLosed };
 
-  Controller(Snake model, Window window)
+  private GameView gameView;
+  private Snake snakeModel;
+  private SnakeView snakeView;
+  private Apple appleModel;
+  private AppleView appleView;
+
+  private Timer timer;
+  private GameState gameState;
+  private int score;
+
+  Controller(Window window, Snake snakeModel, SnakeView snakeView, Apple appleModel, AppleView appleView)
   {
-    this.model = model;
-    this.view = window.getSnakeView();
+    gameView = window.getGameView();
+    this.snakeModel = snakeModel;
+    this.snakeView = snakeView;
+    this.appleModel = appleModel;
+    this.appleView = appleView;
 
     final int CONDITION = JComponent.WHEN_IN_FOCUSED_WINDOW;
-    this.view.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("W"), "move up");
-    this.view.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("A"), "move left");
-    this.view.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("S"), "move down");
-    this.view.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("D"), "move right");
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("W"), "move up");
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("A"), "move left");
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("S"), "move down");
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("D"), "move right");
 
-    this.view.getActionMap().put("move up", new MoveAction(Snake.SnakeDirection.UP));
-    this.view.getActionMap().put("move left", new MoveAction(Snake.SnakeDirection.LEFT));
-    this.view.getActionMap().put("move down", new MoveAction(Snake.SnakeDirection.DOWN));
-    this.view.getActionMap().put("move right", new MoveAction(Snake.SnakeDirection.RIGHT));
+    gameView.getActionMap().put("move up", new MoveAction(Snake.SnakeDirection.UP));
+    gameView.getActionMap().put("move left", new MoveAction(Snake.SnakeDirection.LEFT));
+    gameView.getActionMap().put("move down", new MoveAction(Snake.SnakeDirection.DOWN));
+    gameView.getActionMap().put("move right", new MoveAction(Snake.SnakeDirection.RIGHT));
 
-    timer = new Timer(150, this);
-    isGameRunning = false;
+    timer = new Timer(120, this);
+    gameState = GameState.Paused;
+    score = 0;
+
     window.addStartActionListener(new ActionListener()
     {
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        isGameRunning = true;
-        timer.start();
+        if(gameState == GameState.Paused)
+        {
+          gameState = GameState.Running;
+          timer.start();
+        }
       }
     });
 
@@ -46,28 +61,60 @@ public class Controller implements ActionListener
       @Override
       public void actionPerformed(ActionEvent e)
       {
-        isGameRunning = false;
-        timer.stop();
+        if(gameState == GameState.Running)
+        {
+          gameState = GameState.Paused;
+          timer.stop();
+        }
       }
     });
 
-    updateViewPosition();
-  }
-
-  private void updateViewPosition()
-  {
-    view.setPositions(model.getBodySegments());
-  }
-
-  private void timerTick()
-  {
-    model.update();
-    updateViewPosition();
+    selectApplesPosition();
+    updateSnakeViewPosition();
   }
 
   public void actionPerformed(ActionEvent evt) 
   {
     timerTick();
+  }
+
+  private void selectApplesPosition()
+  {
+    do
+    {
+      appleModel.selectGridPosition(gameView.getGridSize());
+    } while(appleModel.getPosition().equals(snakeModel.getHeadPosition()));
+    appleView.setPosition(appleModel.getPosition());
+  }
+
+  private void updateSnakeViewPosition()
+  {
+    snakeView.setPositions(snakeModel.getBodySegments());
+  }
+
+  private void timerTick()
+  {
+    snakeModel.update();
+    checkIfAppleWasEaten();
+    if(snakeModel.checkForSelfCollision())
+    {
+      gameState = GameState.PlayerLosed;
+      timer.stop();
+      return;
+    }
+    updateSnakeViewPosition();
+    gameView.repaint();
+  }
+
+  private void checkIfAppleWasEaten()
+  {
+    if(appleModel.getPosition().equals(snakeModel.getHeadPosition()))
+    {
+      score += 1;
+      System.out.println("Score: " + score);
+      snakeModel.grow();
+      selectApplesPosition();
+    }
   }
 
   class MoveAction extends AbstractAction
@@ -82,8 +129,8 @@ public class Controller implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e)
     {
-      if(isGameRunning)
-        model.setDirection(direction);
+      if(gameState == GameState.Running)
+        snakeModel.setDirection(direction);
     }
   }
 }

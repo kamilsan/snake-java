@@ -8,8 +8,18 @@ public class Game
     final int GRID_SIZE = 50;
     final int CELL_SIZE = VIEW_SIZE / GRID_SIZE;
     
-    Window gameWindow = new Window(VIEW_SIZE, CELL_SIZE);
+    Window gameWindow = new Window(VIEW_SIZE, GRID_SIZE);
+
     Snake snakeModel = new Snake(GRID_SIZE);
-    Controller controller = new Controller(snakeModel, gameWindow);
+    SnakeView snakeView = new SnakeView(VIEW_SIZE, CELL_SIZE);
+
+    Apple appleModel = new Apple();
+    AppleView appleView = new AppleView(CELL_SIZE);
+
+    GameView gameView = gameWindow.getGameView();
+    gameView.addView(snakeView);
+    gameView.addView(appleView);
+
+    new Controller(gameWindow, snakeModel, snakeView, appleModel, appleView);
   }
 }

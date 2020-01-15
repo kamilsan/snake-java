@@ -6,17 +6,17 @@ import java.awt.event.*;
 
 public class Window extends JFrame
 {
-  private SnakeView snakeView;
+  private GameView gameView;
   private final JButton startBtn;
   private final JButton pauseBtn;
 
-  public Window(int viewSize, int cellSize)
+  public Window(int viewSize, int gridSize)
   {
     super();
     setTitle("Snake");
     getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-    snakeView = new SnakeView(viewSize, cellSize);
+    gameView = new GameView(viewSize, gridSize);
     startBtn = new JButton();
     pauseBtn = new JButton();
     startBtn.setText("Start Game!");
@@ -28,7 +28,7 @@ public class Window extends JFrame
     buttons.add(Box.createRigidArea(new Dimension(5, 0)));
     buttons.add(pauseBtn);
 
-    add(snakeView);
+    add(gameView);
     add(Box.createVerticalStrut(10));
     add(buttons);
     add(Box.createVerticalStrut(10));
@@ -40,9 +40,9 @@ public class Window extends JFrame
     setVisible(true);
   }
 
-  public SnakeView getSnakeView()
+  public GameView getGameView()
   {
-    return snakeView;
+    return gameView;
   }
 
   public void addStartActionListener(ActionListener listener)
