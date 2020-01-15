@@ -25,6 +25,7 @@ public class AppleView implements Drawable
     return position;
   }
 
+  @Override
   public void draw(Graphics g)
   {
     g.setColor(Color.GREEN);

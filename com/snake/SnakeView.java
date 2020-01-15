@@ -25,6 +25,7 @@ public class SnakeView implements Drawable
     }
   }
 
+  @Override
   public void draw(Graphics g) 
   {  
     g.setColor(Color.RED);

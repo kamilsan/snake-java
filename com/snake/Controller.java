@@ -6,7 +6,7 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.AbstractAction;
 
-public class Controller implements ActionListener
+public class Controller
 {
   private enum GameState { Running, Paused, PlayerLosed };
 
@@ -15,6 +15,7 @@ public class Controller implements ActionListener
   private SnakeView snakeView;
   private Apple appleModel;
   private AppleView appleView;
+  private ScoreView scoreView;
 
   private Timer timer;
   private GameState gameState;
@@ -28,6 +29,9 @@ public class Controller implements ActionListener
     this.appleModel = appleModel;
     this.appleView = appleView;
 
+    scoreView = new ScoreView();
+    gameView.addView(scoreView);
+
     final int CONDITION = JComponent.WHEN_IN_FOCUSED_WINDOW;
     gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("W"), "move up");
     gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("A"), "move left");
@@ -39,7 +43,15 @@ public class Controller implements ActionListener
     gameView.getActionMap().put("move down", new MoveAction(Snake.SnakeDirection.DOWN));
     gameView.getActionMap().put("move right", new MoveAction(Snake.SnakeDirection.RIGHT));
 
-    timer = new Timer(120, this);
+    timer = new Timer(100, new ActionListener() 
+    {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+        timerTick();
+      }
+    });
+
     gameState = GameState.Paused;
     score = 0;
 
@@ -71,11 +83,6 @@ public class Controller implements ActionListener
 
     selectApplesPosition();
     updateSnakeViewPosition();
-  }
-
-  public void actionPerformed(ActionEvent evt) 
-  {
-    timerTick();
   }
 
   private void selectApplesPosition()
@@ -111,7 +118,7 @@ public class Controller implements ActionListener
     if(appleModel.getPosition().equals(snakeModel.getHeadPosition()))
     {
       score += 1;
-      System.out.println("Score: " + score);
+      scoreView.setScore(score);
       snakeModel.grow();
       selectApplesPosition();
     }
