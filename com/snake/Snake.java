@@ -95,6 +95,7 @@ public class Snake
   public boolean isSelfColliding()
   {
     var headPosition = bodySegments.get(0);
-    return bodySegments.stream().anyMatch((point) -> point.equals(headPosition) && point != headPosition);
+    return bodySegments.stream().anyMatch((point) -> 
+      point.equals(headPosition) && point != headPosition);
   }
 }

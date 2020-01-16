@@ -41,16 +41,8 @@ public class Controller
     gameView.addView(scoreView);
     gameView.addView(messageView);
 
-    final int CONDITION = JComponent.WHEN_IN_FOCUSED_WINDOW;
-    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("W"), "move up");
-    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("A"), "move left");
-    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("S"), "move down");
-    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("D"), "move right");
-
-    gameView.getActionMap().put("move up", new MoveAction(Snake.SnakeDirection.UP));
-    gameView.getActionMap().put("move left", new MoveAction(Snake.SnakeDirection.LEFT));
-    gameView.getActionMap().put("move down", new MoveAction(Snake.SnakeDirection.DOWN));
-    gameView.getActionMap().put("move right", new MoveAction(Snake.SnakeDirection.RIGHT));
+    initializeInputHandling();
+    addButtonActionListeners(window);
 
     timer = new Timer(100, new ActionListener() 
     {
@@ -65,6 +57,26 @@ public class Controller
     inputHandled = true;
     score = 0;
 
+    selectApplesPosition();
+    updateSnakeViewPosition();
+  }
+
+  private void initializeInputHandling()
+  {
+    final int CONDITION = JComponent.WHEN_IN_FOCUSED_WINDOW;
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("W"), "move up");
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("A"), "move left");
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("S"), "move down");
+    gameView.getInputMap(CONDITION).put(KeyStroke.getKeyStroke("D"), "move right");
+
+    gameView.getActionMap().put("move up", new MoveAction(Snake.SnakeDirection.UP));
+    gameView.getActionMap().put("move left", new MoveAction(Snake.SnakeDirection.LEFT));
+    gameView.getActionMap().put("move down", new MoveAction(Snake.SnakeDirection.DOWN));
+    gameView.getActionMap().put("move right", new MoveAction(Snake.SnakeDirection.RIGHT));
+  }
+
+  private void addButtonActionListeners(Window window)
+  {
     window.addStartActionListener(new ActionListener()
     {
       @Override
@@ -99,9 +111,6 @@ public class Controller
         }
       }
     });
-
-    selectApplesPosition();
-    updateSnakeViewPosition();
   }
 
   private void restartGame()
@@ -166,7 +175,7 @@ public class Controller
     }
   }
 
-  class MoveAction extends AbstractAction
+  private class MoveAction extends AbstractAction
   {
     private Snake.SnakeDirection direction;
 

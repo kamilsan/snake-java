@@ -21,7 +21,8 @@ public class SnakeView implements Drawable
     for(var newPosition : newPositions)
     {
       Point positionInGrid = newPosition;
-      positions.add(new Point((int)positionInGrid.getX()*cellSize, (int)positionInGrid.getY()*cellSize));
+      positions.add(new Point((int)positionInGrid.getX()*cellSize, 
+        (int)positionInGrid.getY()*cellSize));
     }
   }
 
