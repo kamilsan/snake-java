@@ -1,5 +1,8 @@
 package com.snake;
 
+/**
+ * Main class that initializes the game
+ */
 public class Game
 {
   public static void main(final String[] args)
@@ -11,7 +14,7 @@ public class Game
     Window gameWindow = new Window(VIEW_SIZE, GRID_SIZE);
 
     Snake snakeModel = new Snake(GRID_SIZE);
-    SnakeView snakeView = new SnakeView(VIEW_SIZE, CELL_SIZE);
+    SnakeView snakeView = new SnakeView(CELL_SIZE);
 
     Apple appleModel = new Apple();
     AppleView appleView = new AppleView(CELL_SIZE);

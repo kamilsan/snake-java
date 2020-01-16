@@ -4,17 +4,35 @@ import java.awt.*;
 import java.awt.Point;
 import java.util.ArrayList;
 
+/**
+ * Class responsible for graphical representation of the Snake
+ */
 public class SnakeView implements Drawable
 {
+  /**
+   * Size of the snake's body segment
+   */
   private final int cellSize;
+
+  /**
+   * List of body segment's positions
+   */
   private ArrayList<Point> positions;
 
-  public SnakeView(int viewSize, int cellSize)
+  /**
+   * Constructs the view
+   * @param cellSize Size of snake's body segment
+   */
+  public SnakeView(int cellSize)
   {
     positions = new ArrayList<>();
     this.cellSize = cellSize;
   }
 
+  /**
+   * Setter for snake's position
+   * @param newPositions List of body segments' positions
+   */
   public void setPositions(ArrayList<Point> newPositions)
   {
     positions.clear();
@@ -26,6 +44,10 @@ public class SnakeView implements Drawable
     }
   }
 
+  /**
+   * Draws the snake
+   * @param g Graphics object that will handle the drawing
+   */
   @Override
   public void draw(Graphics g) 
   {  

@@ -4,12 +4,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Game window class
+ */
 public class Window extends JFrame
 {
+  /**
+   * Main view for the game graphics
+   */
   private GameView gameView;
+
+  /**
+   * Start button
+   */
   private final JButton startBtn;
+
+  /**
+   * Pause button
+   */
   private final JButton pauseBtn;
 
+  /**
+   * Constructs the window with specified window and game grid sizes
+   * @param viewSize Size of the window
+   * @param gridSize Size of the game grid
+   */
   public Window(int viewSize, int gridSize)
   {
     super();
@@ -40,16 +59,27 @@ public class Window extends JFrame
     setVisible(true);
   }
 
+  /**
+   * Getter for contained game view
+   */
   public GameView getGameView()
   {
     return gameView;
   }
 
+  /**
+   * Adds start button action listener
+   * @param listener Action listener
+   */
   public void addStartActionListener(ActionListener listener)
   {
     startBtn.addActionListener(listener);
   }
 
+  /**
+   * Adds pause button action listener
+   * @param listener Action listener
+   */
   public void addPauseActionListener(ActionListener listener)
   {
     pauseBtn.addActionListener(listener);

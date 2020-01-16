@@ -5,68 +5,136 @@ import java.awt.Point;
 import java.awt.Graphics;
 import java.awt.FontMetrics;
 
+/**
+ * Class responsible for displaying the text
+ */
 public class TextView implements Drawable
 {
+  /**
+   * Posible anchor types
+   */
   public enum AnchorType { Left, Center, Right };
 
-  private String message;
+  /**
+   * Text to be displayd
+   */
+  private String text;
+
+  /**
+   * Position of the anchor point
+   */
   private Point position;
+
+  /**
+   * Tells if the text should be visible
+   */
   private boolean visible;
+
+  /**
+   * Anchor type
+   */
   private AnchorType anchor;
 
-  public TextView(String message, Point position)
+  /**
+   * Constructs the view
+   * @param text Text to be displayed
+   * @param position Position of the text
+   */
+  public TextView(String text, Point position)
   {
-    this(message, position, true);
+    this(text, position, true);
   }
 
-  public TextView(String message, Point position, boolean visible)
+  /**
+   * Constructs the view
+   * @param text Text to be displayed
+   * @param position Position of the text
+   * @param visible Tells if the text should be visible
+   */
+  public TextView(String text, Point position, boolean visible)
   {
-    this.message = message;
+    this.text = text;
     this.position = position;
     this.visible = visible;
     this.anchor = AnchorType.Center;
   }
 
-  public void setMessage(String newMessage)
+  /**
+   * Setter for the text
+   * @param newText Text to be set
+   */
+  public void setText(String newText)
   {
-    message = newMessage;
+    text = newText;
   }
 
+  /**
+   * Setter for the position
+   * @param newPosition Position to be set
+   */
   public void setPosition(Point newPosition)
   {
     position = newPosition;
   }
 
+  /**
+   * Setter for the visibility
+   * @param visibility New visibility
+   */
   public void setVisibility(boolean visibility)
   {
     visible = visibility;
   }
 
+  /**
+   * Setter for the anchor type
+   * @param newAnchor New anchor type
+   */
   public void setAnchor(AnchorType newAnchor)
   {
     anchor = newAnchor;
   }
 
-  public String getMessage()
+  /**
+   * Getter for the text
+   * @return text
+   */
+  public String getText()
   {
-    return message;
+    return text;
   }
 
+  /**
+   * Getter for the position
+   * @return position
+   */
   public Point getPosition()
   {
     return position;
   }
 
+  /**
+   * Getter for the visibility
+   * @return visibility
+   */
   public boolean getVisibility()
   {
     return visible;
   }
 
+  /**
+   * Getter for the anchor type
+   * @return anchor type
+   */
   public AnchorType getAnchor()
   {
     return anchor;
   }
 
+  /**
+   * Draws the text
+   * @param g Graphics object that will handle the drawing
+   */
   @Override
   public void draw(Graphics g)
   {
@@ -77,12 +145,12 @@ public class TextView implements Drawable
       int y = position.y + fontMetrics.getHeight() / 2;
 
       if(anchor == AnchorType.Center)
-        x -= fontMetrics.stringWidth(message) / 2;
+        x -= fontMetrics.stringWidth(text) / 2;
       else if(anchor == AnchorType.Right)
-        x -= fontMetrics.stringWidth(message);
+        x -= fontMetrics.stringWidth(text);
 
       g.setColor(Color.WHITE);
-      g.drawString(message, x, y);
+      g.drawString(text, x, y);
     }
   }
 }

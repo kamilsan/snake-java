@@ -7,23 +7,80 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.AbstractAction;
 
+/**
+ * Class responisble for realizing Game's logic and communication between models and views.
+ */
 public class Controller
 {
+  /**
+   * Possible game states
+   */
   private enum GameState { Running, Paused, PlayerLosed };
 
+  /**
+   * Main view for the game
+   */
   private GameView gameView;
+
+  /**
+   * Snake's model - stores relevant data
+   */
   private Snake snakeModel;
+
+  /**
+   * Snake's view - it's graphical representation
+   */
   private SnakeView snakeView;
+
+  /**
+   * Apple's model - stores it's position
+   */
   private Apple appleModel;
+
+  /**
+   * Apple's view - it's graphical representation
+   */
   private AppleView appleView;
+
+  /**
+   * View for displaying user's score
+   */
   private TextView scoreView;
+
+  /**
+   * View for displaying messages
+   */
   private TextView messageView;
 
+  /**
+   * Variable signifying if game was updated, since user pressed a key.
+   * Used to prevent the user from changing snake's direction twice, between two frames.
+   */
   private boolean inputHandled;
+
+  /**
+   * Timer responsible for updating the game in regular intervals
+   */
   private Timer timer;
+
+  /**
+   * State the game is in
+   */
   private GameState gameState;
+
+  /**
+   * Score counter
+   */
   private int score;
 
+  /**
+   * Constructs the controller
+   * @param window Window that contains the main view for the game
+   * @param snakeModel Snake model
+   * @param snakeView Snake view
+   * @param appleModel Apple model
+   * @param appleView Apple view
+   */
   Controller(Window window, Snake snakeModel, SnakeView snakeView, Apple appleModel, AppleView appleView)
   {
     gameView = window.getGameView();
@@ -61,6 +118,9 @@ public class Controller
     updateSnakeViewPosition();
   }
 
+  /**
+   * Initializes user's input handling
+   */
   private void initializeInputHandling()
   {
     final int CONDITION = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -75,6 +135,10 @@ public class Controller
     gameView.getActionMap().put("move right", new MoveAction(Snake.SnakeDirection.RIGHT));
   }
 
+  /**
+   * Initializes buttons pressing handling
+   * @param window Window that contains the buttons
+   */
   private void addButtonActionListeners(Window window)
   {
     window.addStartActionListener(new ActionListener()
@@ -103,7 +167,7 @@ public class Controller
       {
         if(gameState == GameState.Running)
         {
-          messageView.setMessage("Game Paused.");
+          messageView.setText("Game Paused.");
           messageView.setVisibility(true);
           gameView.repaint();
           gameState = GameState.Paused;
@@ -113,16 +177,22 @@ public class Controller
     });
   }
 
+  /**
+   * Restarts the game the it's inital state
+   */
   private void restartGame()
   {
     snakeModel.reset();
     score = 0;
-    scoreView.setMessage("Score: " + Integer.toString(score));
+    scoreView.setText("Score: " + Integer.toString(score));
     selectApplesPosition();
     gameState = GameState.Running;
     timer.start();
   }
 
+  /**
+   * Selects new apple position after, it was eaten, in a spot that is not occupied by the snake
+   */
   private void selectApplesPosition()
   {
     do
@@ -132,6 +202,10 @@ public class Controller
     appleView.setPosition(appleModel.getPosition());
   }
 
+  /**
+   * Checks if the apple isn't placed on the snake
+   * @return Boolean value signifing if apple's position is valid
+   */
   private boolean isApplePositionIsValid()
   {
     var snakeSegments = snakeModel.getBodySegments();
@@ -143,11 +217,17 @@ public class Controller
     return true;
   }
 
+  /**
+   * Updates the snake's view with model's data
+   */
   private void updateSnakeViewPosition()
   {
     snakeView.setPositions(snakeModel.getBodySegments());
   }
 
+  /**
+   * Updates the game
+   */
   private void timerTick()
   {
     snakeModel.update();
@@ -155,7 +235,7 @@ public class Controller
     checkIfAppleWasEaten();
     if(snakeModel.isSelfColliding())
     {
-      messageView.setMessage("You Losed! Click the button below to play again.");
+      messageView.setText("You Losed! Click the button below to play again.");
       messageView.setVisibility(true);
       gameState = GameState.PlayerLosed;
       timer.stop();
@@ -164,26 +244,41 @@ public class Controller
     gameView.repaint();
   }
 
+  /**
+   * Checks if apple was eaten and handles if it is so
+   */
   private void checkIfAppleWasEaten()
   {
     if(appleModel.getPosition().equals(snakeModel.getHeadPosition()))
     {
       score += 1;
-      scoreView.setMessage("Score: " + Integer.toString(score));
+      scoreView.setText("Score: " + Integer.toString(score));
       snakeModel.grow();
       selectApplesPosition();
     }
   }
 
+  /**
+   * Class representing snake's turning action
+   */
   private class MoveAction extends AbstractAction
   {
+    /**
+     * Snake's new direction of movement
+     */
     private Snake.SnakeDirection direction;
 
+    /**
+     * Constuctor
+     */
     MoveAction(Snake.SnakeDirection direction)
     {
       this.direction = direction;
     }
 
+    /**
+     * Action handler - changes snake's movement direction
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {

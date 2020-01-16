@@ -11,5 +11,8 @@ all: $(SRCS)
 run:
 	java -cp $(OUT_DIR) com.snake.Game
 
+docs:
+	javadoc -d ./docs com.snake
+
 clean:
 	rm -rf $(OUT_DIR)/$(PKG_DIR)/*.class
