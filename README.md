@@ -1,6 +1,6 @@
 ## Snake
 
-Simple snake game implemented in Java using Swing, using MVC design pattern.
+Simple snake game implemented in Java using Swing and MVC design pattern.
 
 ### Buliding
 
