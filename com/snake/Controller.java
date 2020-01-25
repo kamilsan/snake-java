@@ -235,7 +235,7 @@ public class Controller
     checkIfAppleWasEaten();
     if(snakeModel.isSelfColliding())
     {
-      messageView.setText("You Losed! Click the button below to play again.");
+      messageView.setText("You Lose! Click the button below to play again.");
       messageView.setVisibility(true);
       gameState = GameState.PlayerLosed;
       timer.stop();
